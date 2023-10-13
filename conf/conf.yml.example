@@ -6,5 +6,6 @@ midjourney:
   channel_id:
 
 redis:
-  address:
-  password:
+  address: midjourney-redis:6379
+  # address: localhost:6379
+  password: test

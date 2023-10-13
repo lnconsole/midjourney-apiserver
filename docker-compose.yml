@@ -1,0 +1,28 @@
+version: '3.1'
+
+services:
+  midjourney-apiserver:
+    image: hongliang5316/midjourney-apiserver:0.0.2
+    hostname: midjourney-apiserver
+    restart: always
+    volumes:
+      - ./conf/conf.yml:/conf/conf.yml
+    ports:
+      - 8080:8080
+    networks:
+      - app
+
+  redis:
+    image: redis:7
+    hostname: midjourney-redis
+    restart: always
+    volumes:
+      - ./redis_data:/data
+    command: redis-server --requirepass test
+    ports:
+      - 6379:6379
+    networks:
+      - app
+
+networks:
+  app: {}

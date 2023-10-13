@@ -1,0 +1,12 @@
+version: '3.1'
+
+services:
+  redis:
+    image: redis:7
+    hostname: midjourney-redis
+    restart: always
+    volumes:
+      - ./redis_data:/data
+    command: redis-server --requirepass test
+    ports:
+      - 6379:6379

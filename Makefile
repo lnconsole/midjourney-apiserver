@@ -9,3 +9,6 @@ proto:
 
 image:
 	KO_DOCKER_REPO=hongliang5316 ko build ./cmd/midjourney-apiserver -B --platform=all -t $(version)
+
+dev:
+	docker compose --file docker-compose-dev.yml up -d && go run ./cmd/midjourney-apiserver/main.go
