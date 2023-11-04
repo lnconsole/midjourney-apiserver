@@ -21,7 +21,7 @@ github.com/google/uuid
 # github.com/gorilla/websocket v1.4.2
 ## explicit; go 1.12
 github.com/gorilla/websocket
-# github.com/hongliang5316/midjourney-go v0.0.1
+# github.com/hongliang5316/midjourney-go v0.0.1 => github.com/lnconsole/midjourney-go v0.0.0-20231101063146-e2bc03861af1
 ## explicit; go 1.19
 github.com/hongliang5316/midjourney-go/midjourney
 # github.com/redis/go-redis/v9 v9.0.5
@@ -148,3 +148,4 @@ google.golang.org/protobuf/types/known/timestamppb
 # gopkg.in/yaml.v3 v3.0.1
 ## explicit
 gopkg.in/yaml.v3
+# github.com/hongliang5316/midjourney-go => github.com/lnconsole/midjourney-go v0.0.0-20231101063146-e2bc03861af1

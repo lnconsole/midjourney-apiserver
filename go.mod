@@ -2,6 +2,8 @@ module github.com/hongliang5316/midjourney-apiserver
 
 go 1.19
 
+replace github.com/hongliang5316/midjourney-go => github.com/lnconsole/midjourney-go v0.0.0-20231101063146-e2bc03861af1
+
 require (
 	github.com/bwmarrin/discordgo v0.27.1
 	github.com/google/uuid v1.3.0
