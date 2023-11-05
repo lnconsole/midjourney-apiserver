@@ -31,7 +31,7 @@ func webhookHandler(w http.ResponseWriter, r *http.Request) {
 	req := &webhook.WebhookRequest{}
 	json.Unmarshal(body, req)
 
-	log.Printf("req: %+v", req)
+	log.Printf("------------- webhook req: %+v", req)
 
 	if req.Type == store.TypeImagine {
 		resp, err := apiServiceClient.Upscale(context.Background(), &api.UpscaleRequest{
@@ -50,7 +50,7 @@ func webhookHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	go func() {
 		resp, err := apiServiceClient.Imagine(context.Background(), &api.ImagineRequest{
-			Prompt:  "japan::ostrich",
+			Prompt:  "tokyo city",
 			Webhook: "http://127.0.0.1:8000/",
 		})
 		if err != nil {
