@@ -65,12 +65,12 @@ func (s *Service) Imagine(ctx context.Context, in *api.ImagineRequest) (*api.Ima
 	}
 
 	select {
-	case <-time.After(10 * time.Second):
-		return &api.ImagineResponse{
-			RequestId: in.RequestId,
-			Code:      api.Codes_CODES_PROCESSING_TIMEOUT,
-			Msg:       "timeout",
-		}, nil
+	// case <-time.After(10 * time.Second):
+	// 	return &api.ImagineResponse{
+	// 		RequestId: in.RequestId,
+	// 		Code:      api.Codes_CODES_PROCESSING_TIMEOUT,
+	// 		Msg:       "timeout",
+	// 	}, nil
 	case msgInfo := <-KeyChan.Get(key):
 		if msgInfo.Error != nil {
 			code := api.Codes_CODES_SERVER_INTERNAL_ERROR
