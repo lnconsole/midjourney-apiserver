@@ -47,6 +47,11 @@ func (s *Service) Imagine(ctx context.Context, in *api.ImagineRequest) (*api.Ima
 
 	defer KeyChan.Del(key)
 
+	Mutex.Lock()
+	go func() {
+		time.Sleep(2 * time.Second)
+		Mutex.Unlock()
+	}()
 	if err := s.MJClient.Imagine(ctx, &midjourney.ImagineRequest{
 		GuildID:   s.Config.Midjourney.GuildID,
 		ChannelID: s.Config.Midjourney.ChannelID,
