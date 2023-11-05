@@ -101,12 +101,13 @@ func (s *Store) SaveWithComplete(ctx context.Context, completeMessageID, prompt,
 }
 
 func GetKey(prompt string) string {
-	index := strings.Index(prompt, "--")
-	if index == -1 {
-		return strings.TrimSpace(prompt)
-	}
+	return strings.TrimSpace(prompt)
+	// index := strings.Index(prompt, "--")
+	// if index == -1 {
+	// 	return strings.TrimSpace(prompt)
+	// }
 
-	return strings.TrimSpace(prompt[0:index])
+	// return strings.TrimSpace(prompt[0:index])
 }
 
 func (s *Store) GetID(ctx context.Context, prompt string) (string, error) {

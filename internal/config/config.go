@@ -1,8 +1,8 @@
 package config
 
 import (
-	"io/ioutil"
 	"log"
+	"os"
 
 	"gopkg.in/yaml.v3"
 )
@@ -27,7 +27,7 @@ type Redis struct {
 func Load() *Config {
 	cfg := new(Config)
 
-	data, err := ioutil.ReadFile("./conf/conf.yml")
+	data, err := os.ReadFile("./conf/conf.yml")
 	if err != nil {
 		log.Fatal(err)
 	}
