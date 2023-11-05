@@ -14,4 +14,4 @@ dev:
 	docker compose --file docker-compose-dev.yml up -d && go run ./cmd/midjourney-apiserver/main.go
 
 prod:
-	docker compose --file docker-compose-dev.yml up -d && go build -tags prod -o prod
+	go build -tags prod -o prod
