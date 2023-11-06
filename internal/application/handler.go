@@ -4,12 +4,17 @@ import (
 	"context"
 	"encoding/json"
 	"log"
+	"regexp"
 	"strings"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/hongliang5316/midjourney-apiserver/internal/service"
 	"github.com/hongliang5316/midjourney-apiserver/pkg/store"
+)
+
+var (
+	m1 = regexp.MustCompile(` --seed [\d\w]+`)
 )
 
 func (app *Application) handleDescribeUpdateEvent(m *discordgo.MessageUpdate) {
@@ -37,6 +42,19 @@ func (app *Application) handleCompleteEvent(m *discordgo.MessageCreate) {
 	c := newContent(m.Content)
 	mode := c.getMode()
 	prompt := c.getPrompt()
+
+	// promptWithSeed := m1.FindString(prompt)
+	// if promptWithSeed == "" {
+	// 	if m.MessageReference != nil {
+	// 		meta, err := app.Store.GetMetaData(context.Background(), m.MessageReference.MessageID)
+	// 		if err != nil {
+	// 			log.Printf("err getting message id: %s", err)
+	// 			return
+	// 		}
+	// 		prompt = meta.Prompt
+	// 	}
+	// }
+
 	log.Printf("mode: %s, prompt: %s", mode, prompt)
 
 	if err := app.Store.SaveWithComplete(context.Background(), m.ID, prompt, mode, toJson(m.Attachments), webhookCallback); err != nil {
@@ -95,8 +113,25 @@ func (app *Application) handleEmbedErrorEvent(m *discordgo.MessageCreate) {
 func (app *Application) handleWaitingToStartEvent(m *discordgo.MessageCreate) {
 	c := newContent(m.Content)
 	prompt := c.getPrompt()
-	key := store.GetKey(prompt)
 
+	log.Printf("my id: %s", m.ID)
+	if m.MessageReference != nil {
+		log.Printf("message reference id: %s", m.MessageReference.MessageID)
+	}
+
+	// promptWithSeed := m1.FindString(prompt)
+	// if promptWithSeed == "" {
+	// 	if m.MessageReference != nil {
+	// 		meta, err := app.Store.GetMetaData(context.Background(), m.MessageReference.MessageID)
+	// 		if err != nil {
+	// 			log.Printf("err getting message id: %s", err)
+	// 			return
+	// 		}
+	// 		prompt = meta.Prompt
+	// 	}
+	// }
+
+	key := store.GetKey(prompt)
 	ch := service.KeyChan.Get(key)
 	if ch == nil { // timeout or other exception
 		return

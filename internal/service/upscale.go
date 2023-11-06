@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/hongliang5316/midjourney-apiserver/pkg/api"
@@ -97,12 +96,12 @@ func (s *Service) Upscale(ctx context.Context, in *api.UpscaleRequest) (*api.Ups
 	}
 
 	select {
-	case <-time.After(10 * time.Second):
-		return &api.UpscaleResponse{
-			RequestId: in.RequestId,
-			Code:      api.Codes_CODES_SERVER_INTERNAL_ERROR,
-			Msg:       "timeout",
-		}, nil
+	// case <-time.After(10 * time.Second):
+	// 	return &api.UpscaleResponse{
+	// 		RequestId: in.RequestId,
+	// 		Code:      api.Codes_CODES_SERVER_INTERNAL_ERROR,
+	// 		Msg:       "timeout",
+	// 	}, nil
 	case msgInfo := <-KeyChan.Get(key):
 		if msgInfo.Error != nil {
 			code := api.Codes_CODES_SERVER_INTERNAL_ERROR

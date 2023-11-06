@@ -93,6 +93,9 @@ func (s *Store) SaveWithComplete(ctx context.Context, completeMessageID, prompt,
 		return err
 	}
 
+	log.Printf("stored my id: %s", id)
+	log.Printf("stored metadata: %+v", metaData)
+
 	if metaData == nil { // seems impossible
 		return nil
 	}
@@ -102,14 +105,20 @@ func (s *Store) SaveWithComplete(ctx context.Context, completeMessageID, prompt,
 	return nil
 }
 
-func GetKey(prompt string) string {
+func GetKey(promptOrTaskID string) string {
 	// parse seed
 	m1 := regexp.MustCompile(` --seed [\d\w]+`)
-	seed := m1.FindString(prompt)
-	index := strings.Index(prompt, "--")
-	trimmed := strings.TrimSpace(prompt[0:index])
+	seed := m1.FindString(promptOrTaskID)
+	if seed != "" {
+		// Imagine
+		index := strings.Index(promptOrTaskID, "--")
+		trimmed := strings.TrimSpace(promptOrTaskID[0:index])
 
-	return trimmed + seed
+		return trimmed + seed
+	} else {
+		// Upscale
+		return promptOrTaskID
+	}
 
 	// return keyPrompt
 	// return strings.TrimSpace(prompt)
