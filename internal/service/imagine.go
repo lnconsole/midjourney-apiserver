@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"math/rand"
+	"regexp"
 	"time"
 
 	"github.com/google/uuid"
@@ -24,16 +26,24 @@ func (s *Service) Imagine(ctx context.Context, in *api.ImagineRequest) (*api.Ima
 		in.RequestId = uuid.NewString()
 	}
 
-	if err := s.Store.CheckPrompt(ctx, in.Prompt); err != nil {
-		e := err.(store.Error)
-		return &api.ImagineResponse{
-			RequestId: in.RequestId,
-			Code:      e.Code,
-			Msg:       e.Msg,
-		}, nil
-	}
+	// clean off seed
+	m1 := regexp.MustCompile(` --seed [\d\w]+`)
+	cleansedPrompt := m1.ReplaceAllString(in.Prompt, "")
+	promptWithSeed := fmt.Sprintf("%s --seed %d", cleansedPrompt, generateRandomSeed())
 
-	key := store.GetKey(in.Prompt)
+	// create keyPrompt = raw prompt + seed
+	// crate cleansedPrompt = cleansed prompt + seed
+
+	// if err := s.Store.CheckPrompt(ctx, in.Prompt); err != nil {
+	// 	e := err.(store.Error)
+	// 	return &api.ImagineResponse{
+	// 		RequestId: in.RequestId,
+	// 		Code:      e.Code,
+	// 		Msg:       e.Msg,
+	// 	}, nil
+	// }
+
+	key := store.GetKey(promptWithSeed)
 
 	log.Printf("Imagine, key: %s, len: %d", key, len(key))
 
@@ -55,7 +65,7 @@ func (s *Service) Imagine(ctx context.Context, in *api.ImagineRequest) (*api.Ima
 	if err := s.MJClient.Imagine(ctx, &midjourney.ImagineRequest{
 		GuildID:   s.Config.Midjourney.GuildID,
 		ChannelID: s.Config.Midjourney.ChannelID,
-		Prompt:    in.Prompt,
+		Prompt:    promptWithSeed,
 	}); err != nil {
 		return &api.ImagineResponse{
 			RequestId: in.RequestId,
@@ -106,4 +116,9 @@ func (s *Service) Imagine(ctx context.Context, in *api.ImagineRequest) (*api.Ima
 			},
 		}, nil
 	}
+}
+
+// generate a random seed between 0 and 4294967295
+func generateRandomSeed() int {
+	return rand.Intn(4294967295)
 }

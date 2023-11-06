@@ -37,6 +37,7 @@ func (app *Application) handleCompleteEvent(m *discordgo.MessageCreate) {
 	c := newContent(m.Content)
 	mode := c.getMode()
 	prompt := c.getPrompt()
+	log.Printf("mode: %s, prompt: %s", mode, prompt)
 
 	if err := app.Store.SaveWithComplete(context.Background(), m.ID, prompt, mode, toJson(m.Attachments), webhookCallback); err != nil {
 		log.Printf("Call store.SaveWithComplete failed, err: %+v", err)

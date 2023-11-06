@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"regexp"
 	"strings"
 	"time"
 
@@ -46,6 +47,7 @@ type CompleteInfo struct {
 func (s *Store) SaveWithComplete(ctx context.Context, completeMessageID, prompt, mode, attachments string, webhookFunc func(*MetaData)) error {
 	key := GetKey(prompt)
 	id, err := s.Get(ctx, key).Result()
+	log.Printf("Imagine, key: %s, len: %d", key, len(key))
 	if err != nil {
 		// not found, maybe expired or exception
 		// drop it
@@ -101,13 +103,21 @@ func (s *Store) SaveWithComplete(ctx context.Context, completeMessageID, prompt,
 }
 
 func GetKey(prompt string) string {
-	return strings.TrimSpace(prompt)
+	// parse seed
+	m1 := regexp.MustCompile(` --seed [\d\w]+`)
+	seed := m1.FindString(prompt)
+	index := strings.Index(prompt, "--")
+	trimmed := strings.TrimSpace(prompt[0:index])
+
+	return trimmed + seed
+
+	// return keyPrompt
+	// return strings.TrimSpace(prompt)
 	// index := strings.Index(prompt, "--")
 	// if index == -1 {
 	// 	return strings.TrimSpace(prompt)
 	// }
 
-	// return strings.TrimSpace(prompt[0:index])
 }
 
 func (s *Store) GetID(ctx context.Context, prompt string) (string, error) {
